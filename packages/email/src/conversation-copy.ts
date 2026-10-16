@@ -34,7 +34,7 @@ export function teamAlertSubject(
   const topic =
     subject?.replace(/^\s*(re:\s*)+/i, '').trim() ||
     preview?.replace(/\s+/g, ' ').trim().slice(0, 80) ||
-    'New message'
+    'Nova mensagem'
   return `${visitorName}: ${topic}`
 }
 
@@ -68,30 +68,32 @@ export function conversationMessageCopy(opts: {
   if (direction === 'visitor_message') {
     const intro =
       opts.isFirstMessage === true
-        ? `${senderName} started a conversation in ${workspaceName}.`
-        : `${senderName} sent a new message in ${workspaceName}.`
+        ? `${senderName} iniciou uma conversa em ${workspaceName}.`
+        : `${senderName} enviou uma nova mensagem em ${workspaceName}.`
     return {
       subject: teamAlertSubject(senderName, opts.conversationSubject, opts.preview),
-      heading: 'New message',
+      heading: 'Nova mensagem',
       intro,
-      ctaLabel: 'Open inbox',
-      reason: 'You received this email because you are a member of this workspace.',
+      ctaLabel: 'Abrir a caixa de entrada',
+      reason: 'Você recebeu este e-mail porque faz parte deste workspace.',
       useHumanTemplate: false,
     }
   }
 
   const isReply = direction === 'agent_reply'
-  const generic = isReply ? `New reply from ${workspaceName}` : `New message from ${workspaceName}`
+  const generic = isReply
+    ? `Nova resposta de ${workspaceName}`
+    : `Nova mensagem de ${workspaceName}`
   return {
     subject: forwarded ?? generic,
     heading: forwarded ?? generic,
     intro: isReply
-      ? `${senderName} replied to your conversation with ${workspaceName}.`
-      : `${senderName} from ${workspaceName} sent you a message.`,
-    ctaLabel: 'View conversation',
+      ? `${senderName} respondeu à sua conversa com ${workspaceName}.`
+      : `${senderName}, de ${workspaceName}, enviou uma mensagem para você.`,
+    ctaLabel: 'Ver conversa',
     reason: isReply
-      ? 'You received this email because you have an open conversation with this team.'
-      : `You received this email because ${workspaceName} sent you a message.`,
+      ? 'Você recebeu este e-mail porque tem uma conversa aberta com esta equipe.'
+      : `Você recebeu este e-mail porque ${workspaceName} enviou uma mensagem para você.`,
     useHumanTemplate,
   }
 }

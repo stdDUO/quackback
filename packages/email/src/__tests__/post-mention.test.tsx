@@ -19,7 +19,7 @@ describe('PostMentionEmail', () => {
     expect(html).toContain('https://example.com/p/123')
   })
 
-  it('uses "Anonymous user" fallback when mentionerName is empty', async () => {
+  it('uses "Usuário anônimo" fallback when mentionerName is empty', async () => {
     const html = await render(
       <PostMentionEmail
         mentionerName=""
@@ -29,7 +29,7 @@ describe('PostMentionEmail', () => {
         workspaceName="Acme"
       />
     )
-    expect(html).toContain('Anonymous user')
+    expect(html).toContain('Usuário anônimo')
   })
 
   it('omits the excerpt block when excerpt is empty', async () => {

@@ -67,7 +67,7 @@ export function EmailLayout({
             {showPoweredBy ? (
               <Text style={typography.footer}>
                 <Link href="https://quackback.io" style={{ ...utils.link, fontSize: '13px' }}>
-                  Powered by Quackback
+                  Desenvolvido por Quackback
                 </Link>
               </Text>
             ) : null}
@@ -87,7 +87,7 @@ export function TransactionalFooter({ children }: { children: React.ReactNode })
 export function NotificationFooter({
   reason,
   unsubscribeUrl,
-  unsubscribeLabel = 'Unsubscribe from this post',
+  unsubscribeLabel = 'Cancelar inscrição neste post',
   preferencesUrl,
 }: {
   reason: string
@@ -106,7 +106,7 @@ export function NotificationFooter({
         <>
           {' · '}
           <Link href={preferencesUrl} style={{ ...utils.link, fontSize: '13px' }}>
-            Manage notification preferences
+            Gerenciar preferências de notificação
           </Link>
         </>
       ) : null}

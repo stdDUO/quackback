@@ -24,19 +24,19 @@ export function PostMentionEmail({
   preferencesUrl,
   logoUrl,
 }: PostMentionEmailProps) {
-  const displayName = mentionerName || 'Anonymous user'
+  const displayName = mentionerName || 'Usuário anônimo'
   const hasExcerpt = excerpt.length > 0
 
   return (
     <EmailLayout
-      preview={`${displayName} mentioned you in "${postTitle}"`}
+      preview={`${displayName} mencionou você em "${postTitle}"`}
       logoUrl={logoUrl}
       logoAlt={workspaceName}
     >
       {/* Content */}
-      <Heading style={typography.h1}>You were mentioned</Heading>
+      <Heading style={typography.h1}>Mencionaram você</Heading>
       <Text style={typography.text}>
-        {displayName} mentioned you in {postTitle}.
+        {displayName} mencionou você em {postTitle}.
       </Text>
 
       {/* Post Title */}
@@ -85,20 +85,20 @@ export function PostMentionEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={postUrl}>
-          View Feedback
+          Ver feedback
         </Button>
       </Section>
 
       {/* Footer */}
       {unsubscribeUrl ? (
         <NotificationFooter
-          reason={`You received this email because you were mentioned in ${workspaceName}.`}
+          reason={`Você recebeu este e-mail porque foi mencionado em ${workspaceName}.`}
           unsubscribeUrl={unsubscribeUrl}
           preferencesUrl={preferencesUrl}
         />
       ) : (
         <Text style={typography.footer}>
-          You received this email because you were mentioned in {workspaceName}.
+          Você recebeu este e-mail porque foi mencionado em {workspaceName}.
         </Text>
       )}
     </EmailLayout>

@@ -33,10 +33,10 @@ const impactColors: Record<IncidentImpact, string> = {
 }
 
 const impactLabels: Record<IncidentImpact, string> = {
-  none: 'No impact',
-  minor: 'Minor impact',
-  major: 'Major impact',
-  critical: 'Critical impact',
+  none: 'Sem impacto',
+  minor: 'Impacto baixo',
+  major: 'Impacto alto',
+  critical: 'Impacto crítico',
 }
 
 export function StatusIncidentPublishedEmail({
@@ -60,8 +60,10 @@ export function StatusIncidentPublishedEmail({
       logoAlt={workspaceName}
     >
       {/* Content */}
-      <Heading style={typography.h1}>New incident reported</Heading>
-      <Text style={typography.text}>{workspaceName} just posted an update to its status page.</Text>
+      <Heading style={typography.h1}>Novo incidente registrado</Heading>
+      <Text style={typography.text}>
+        {workspaceName} acabou de publicar uma atualização na página de status.
+      </Text>
 
       {/* Impact bar */}
       <Section
@@ -122,7 +124,7 @@ export function StatusIncidentPublishedEmail({
               marginBottom: '8px',
             }}
           >
-            Affected components
+            Componentes afetados
           </Text>
           {affectedComponents.map((component) => (
             <Text
@@ -138,13 +140,13 @@ export function StatusIncidentPublishedEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={incidentUrl}>
-          View live status
+          Ver status ao vivo
         </Button>
       </Section>
 
       {/* Footer */}
       <NotificationFooter
-        reason="You received this email because you're subscribed to status updates."
+        reason="Você recebeu este e-mail porque assina as atualizações de status."
         unsubscribeUrl={unsubscribeUrl}
         preferencesUrl={preferencesUrl}
       />

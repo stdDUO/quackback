@@ -12,24 +12,24 @@ interface WelcomeEmailProps {
 export function WelcomeEmail({ name, workspaceName, dashboardUrl, logoUrl }: WelcomeEmailProps) {
   return (
     <EmailLayout
-      preview={`Welcome to ${workspaceName} on Quackback`}
+      preview={`Boas-vindas ao ${workspaceName} no Quackback`}
       logoUrl={logoUrl}
       logoAlt={workspaceName}
     >
       {/* Content */}
-      <Heading style={typography.h1}>Welcome to Quackback!</Heading>
+      <Heading style={typography.h1}>Boas-vindas ao Quackback!</Heading>
       <Text style={typography.text}>
-        Hi {name}, your workspace <strong>{workspaceName}</strong> is ready. Start collecting and
-        managing customer feedback today.
+        Olá, {name}. O workspace <strong>{workspaceName}</strong> está pronto. Comece a receber e
+        organizar o feedback dos clientes.
       </Text>
 
       {/* Features List - using Row/Column instead of spans for email compatibility */}
       <Section style={{ marginBottom: '24px' }}>
         {[
-          'Create feedback boards',
-          'Invite your team',
-          'Share your public roadmap',
-          'Connect GitHub, Slack & Discord',
+          'Criar quadros de feedback',
+          'Convidar sua equipe',
+          'Compartilhar o roadmap público',
+          'Conectar GitHub, Slack e Discord',
         ].map((feature) => (
           <Row key={feature} style={{ marginBottom: '4px' }}>
             <Column style={{ width: '28px', verticalAlign: 'top' }}>
@@ -45,15 +45,14 @@ export function WelcomeEmail({ name, workspaceName, dashboardUrl, logoUrl }: Wel
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginBottom: '32px' }}>
         <Button style={button.primary} href={dashboardUrl}>
-          Go to Dashboard
+          Ir para o painel
         </Button>
       </Section>
 
       {/* Footer */}
       <TransactionalFooter>
-        Happy collecting!
-        <br />
-        The Quackback Team
+        Conte com a gente!
+        <br />A equipe do Quackback
       </TransactionalFooter>
     </EmailLayout>
   )

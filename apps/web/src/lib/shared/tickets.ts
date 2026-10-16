@@ -61,10 +61,10 @@ export type TicketStageLabels = Record<TicketStage, string>
 
 /** Defaults shown to requesters when a workspace has not customized the labels. */
 export const DEFAULT_TICKET_STAGE_LABELS: TicketStageLabels = {
-  received: 'Received',
-  in_progress: 'In progress',
-  awaiting_requester: 'Awaiting your reply',
-  resolved: 'Resolved',
+  received: 'Recebido',
+  in_progress: 'Em andamento',
+  awaiting_requester: 'Aguardando sua resposta',
+  resolved: 'Resolvido',
 }
 
 /**

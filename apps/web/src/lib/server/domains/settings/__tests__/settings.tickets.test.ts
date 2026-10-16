@@ -17,8 +17,8 @@ describe('resolveStageLabels', () => {
   it('merges a partial saved map over the defaults', () => {
     const labels = resolveStageLabels(meta({ ticketStageLabels: { resolved: 'Done' } }))
     expect(labels.resolved).toBe('Done')
-    expect(labels.received).toBe('Received')
-    expect(labels.awaiting_requester).toBe('Awaiting your reply')
+    expect(labels.received).toBe('Recebido')
+    expect(labels.awaiting_requester).toBe('Aguardando sua resposta')
   })
 
   it('falls back to defaults when a stored label is invalid', () => {

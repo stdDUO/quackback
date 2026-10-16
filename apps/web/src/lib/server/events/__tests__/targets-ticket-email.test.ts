@@ -362,14 +362,14 @@ describe('getTicketResolvedEmailTargets', () => {
     expect(await getTicketResolvedEmailTargets(statusEvent(), context)).toEqual([])
   })
 
-  it('B22: a null-stage close emails with the generic Closed label + closedGeneric copy', async () => {
+  it('B22: a null-stage close emails with the generic Encerrado label + closedGeneric copy', async () => {
     getTicketWatchersForEvent.mockResolvedValue(['principal_requester'])
     queueSelect([{ id: 'principal_requester', email: 'req@example.com', contactEmail: null }])
     const targets = await getTicketResolvedEmailTargets(statusEvent({ stage: null }), context)
     expect(targets).toHaveLength(1)
     expect(targets[0].config).toMatchObject({
       kind: 'status_resolved',
-      statusChange: { previousLabel: 'Received', newLabel: 'Closed' },
+      statusChange: { previousLabel: 'Received', newLabel: 'Encerrado' },
       closedGeneric: true,
     })
   })
@@ -487,10 +487,10 @@ describe('getSlaEmailTargets', () => {
     expect(targets[0].config).toMatchObject({
       kind: 'sla_warning',
       title: 'Jane Doe',
-      clockLabel: 'first response',
+      clockLabel: 'primeira resposta',
       ctaUrl: 'https://p/admin/inbox?i=conversation_1',
     })
-    expect(targets[0].config.dueLabel).toBeTruthy()
+    expect(targets[0].config.dueLabel).toBe('17 de jul., 02:00 UTC')
   })
 
   it('falls back to the assigned team roster', async () => {

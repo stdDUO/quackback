@@ -23,41 +23,47 @@ export function RecoveryCodeUsedEmail({
   occurredAt,
   logoUrl,
 }: RecoveryCodeUsedEmailProps) {
-  const workspaceLabel = workspaceName ? ` for ${workspaceName}` : ''
+  const enteredWhere = workspaceName ? ` no workspace ${workspaceName}` : ''
+  const accountWhere = workspaceName ? ` do workspace ${workspaceName}` : ''
   return (
-    <EmailLayout preview={`A recovery code was used to sign in${workspaceLabel}`} logoUrl={logoUrl}>
-      <Heading style={{ ...typography.h1, textAlign: 'center' }}>A recovery code was used</Heading>
+    <EmailLayout
+      preview={`Um código de recuperação foi usado para entrar${enteredWhere}`}
+      logoUrl={logoUrl}
+    >
+      <Heading style={{ ...typography.h1, textAlign: 'center' }}>
+        Um código de recuperação foi usado
+      </Heading>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        Someone signed in to your account{workspaceLabel} using one of your saved recovery codes.
+        Alguém entrou na sua conta{accountWhere} usando um dos seus códigos de recuperação salvos.
       </Text>
 
       <Section style={{ marginTop: '24px', marginBottom: '24px' }}>
         <Text style={typography.textSmall}>
-          <strong>When:</strong> {occurredAt}
+          <strong>Quando:</strong> {occurredAt}
         </Text>
         {ipAddress ? (
           <Text style={typography.textSmall}>
-            <strong>IP address:</strong> {ipAddress}
+            <strong>Endereço IP:</strong> {ipAddress}
           </Text>
         ) : null}
         {userAgent ? (
           <Text style={typography.textSmall}>
-            <strong>Device:</strong> {userAgent}
+            <strong>Dispositivo:</strong> {userAgent}
           </Text>
         ) : null}
       </Section>
 
       <Text style={typography.text}>
-        If this was you, no action is needed. The code is now spent and can&apos;t be reused.
+        Se foi você, não precisa fazer nada. O código já foi usado e não pode ser reutilizado.
       </Text>
       <Text style={typography.text}>
-        If this wasn&apos;t you, sign in and rotate your recovery codes immediately. The person who
-        used the code now has an active session — revoke it from your security settings.
+        Se não foi você, entre e troque seus códigos de recuperação agora. Quem usou o código tem
+        uma sessão ativa. Encerre essa sessão nas configurações de segurança.
       </Text>
 
       <TransactionalFooter>
-        You&apos;re receiving this because a recovery code on your account was just used. These
-        alerts are required and can&apos;t be disabled.
+        Você está recebendo este e-mail porque um código de recuperação da sua conta acabou de ser
+        usado. Estes alertas são obrigatórios e não podem ser desativados.
       </TransactionalFooter>
     </EmailLayout>
   )

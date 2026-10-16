@@ -32,17 +32,17 @@ export function NewSignInEmail({
   logoUrl,
 }: NewSignInEmailProps) {
   return (
-    <EmailLayout preview="A new sign-in was detected on your account" logoUrl={logoUrl}>
-      <Heading style={typography.h1}>New sign-in to your account</Heading>
+    <EmailLayout preview="Detectamos um novo acesso na sua conta" logoUrl={logoUrl}>
+      <Heading style={typography.h1}>Novo acesso à sua conta</Heading>
       <Text style={typography.text}>
         {workspaceName
-          ? `Someone just signed in to your ${workspaceName} account on a device we haven't seen before.`
-          : 'Someone just signed in to your account on a device we haven’t seen before.'}
+          ? `Alguém acabou de entrar na sua conta de ${workspaceName} em um dispositivo que ainda não tínhamos visto.`
+          : 'Alguém acabou de entrar na sua conta em um dispositivo que ainda não tínhamos visto.'}
       </Text>
 
       <Section style={utils.codeBox}>
         <Text style={typography.text}>
-          <strong>When:</strong> {occurredAt}
+          <strong>Quando:</strong> {occurredAt}
         </Text>
         {ipAddress ? (
           <Text style={typography.text}>
@@ -51,12 +51,12 @@ export function NewSignInEmail({
         ) : null}
         {location ? (
           <Text style={typography.text}>
-            <strong>Location:</strong> {location}
+            <strong>Local:</strong> {location}
           </Text>
         ) : null}
         {userAgent ? (
           <Text style={typography.text}>
-            <strong>Device:</strong> {userAgent}
+            <strong>Dispositivo:</strong> {userAgent}
           </Text>
         ) : null}
       </Section>
@@ -65,27 +65,27 @@ export function NewSignInEmail({
 
       <Text style={typography.text}>
         {ssoEnforced ? (
-          'If that was you, no action needed. If it wasn’t, change your password at your identity provider and ask a workspace admin to sign out other sessions.'
+          'Se foi você, não precisa fazer nada. Se não foi, altere sua senha no provedor de identidade e peça a um administrador do workspace para encerrar as outras sessões.'
         ) : (
           <>
-            If that was you, no action needed. If it wasn’t,{' '}
+            Se foi você, não precisa fazer nada. Se não foi,{' '}
             {settingsUrl ? (
               <>
                 <Link href={settingsUrl} style={utils.link}>
-                  set or change your password
+                  defina ou altere sua senha
                 </Link>{' '}
-                from your profile settings — this signs out other sessions.
+                nas configurações do perfil. Isso encerra as outras sessões.
               </>
             ) : (
-              'set or change your password from your profile settings — this signs out other sessions.'
+              'defina ou altere sua senha nas configurações do perfil. Isso encerra as outras sessões.'
             )}
           </>
         )}
       </Text>
 
       <TransactionalFooter>
-        You&apos;re receiving this because a new sign-in was detected on your account. These alerts
-        are required and can&apos;t be disabled.
+        Você está recebendo este e-mail porque detectamos um novo acesso na sua conta. Estes alertas
+        são obrigatórios e não podem ser desativados.
       </TransactionalFooter>
     </EmailLayout>
   )

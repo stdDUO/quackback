@@ -560,7 +560,7 @@ export async function sendInvitationEmail(params: SendInvitationParams): Promise
 
   return sendEmail({
     to,
-    subject: `You've been invited to join ${workspaceName} on Quackback`,
+    subject: `Convite para entrar em ${workspaceName} no Quackback`,
     react: InvitationEmail({
       invitedByName,
       inviteeName,
@@ -590,7 +590,7 @@ export async function sendPortalInviteEmail(params: SendPortalInviteParams): Pro
 
   return sendEmail({
     to,
-    subject: `You've been invited to ${workspaceName}`,
+    subject: `Convite para ${workspaceName}`,
     react: PortalInviteEmail({ workspaceName, inviteLink, logoUrl, personalMessage }),
     emailType: 'PortalInviteEmail',
     preview: { inviteLink },
@@ -614,7 +614,7 @@ export async function sendWelcomeEmail(params: SendWelcomeParams): Promise<Email
 
   return sendEmail({
     to,
-    subject: `Welcome to ${workspaceName} on Quackback!`,
+    subject: `Boas-vindas ao ${workspaceName} no Quackback!`,
     react: WelcomeEmail({ name, workspaceName, dashboardUrl, logoUrl }),
     emailType: 'WelcomeEmail',
     preview: { dashboardUrl },
@@ -638,7 +638,7 @@ export async function sendMagicLinkEmail(params: SendMagicLinkParams): Promise<E
   log.debug('sending sign-in email')
   return sendEmail({
     to,
-    subject: 'Your Quackback sign-in link',
+    subject: 'Seu link de acesso ao Quackback',
     react: MagicLinkEmail({ signInUrl, code, logoUrl }),
     emailType: 'MagicLinkEmail',
     preview: { signInUrl, code },
@@ -674,7 +674,7 @@ export async function sendSignupNotAllowedEmail(
   log.debug('sending sign-in refusal email')
   return sendEmail({
     to,
-    subject: 'About your Quackback sign-in request',
+    subject: 'Sobre seu pedido de acesso ao Quackback',
     react: SignupNotAllowedEmail({ workspaceName, logoUrl }),
     emailType: 'SignupNotAllowedEmail',
   })
@@ -698,7 +698,7 @@ export async function sendPasswordResetEmail(
   log.debug('sending password reset email')
   return sendEmail({
     to,
-    subject: 'Reset your Quackback password',
+    subject: 'Redefina sua senha do Quackback',
     react: PasswordResetEmail({ resetLink, logoUrl }),
     emailType: 'PasswordResetEmail',
     preview: { resetLink },
@@ -731,7 +731,7 @@ export async function sendRecoveryCodeUsedEmail(
   log.debug('sending recovery-code-used alert')
   return sendEmail({
     to,
-    subject: 'A recovery code on your account was just used',
+    subject: 'Um código de recuperação da sua conta acabou de ser usado',
     react: RecoveryCodeUsedEmail({ workspaceName, ipAddress, userAgent, occurredAt, logoUrl }),
     emailType: 'RecoveryCodeUsedEmail',
     preview: { occurredAt },
@@ -774,7 +774,7 @@ export async function sendNewSignInEmail(params: SendNewSignInParams): Promise<E
   log.debug('sending new-sign-in alert')
   return sendEmail({
     to,
-    subject: 'New sign-in to your account',
+    subject: 'Novo acesso à sua conta',
     react: NewSignInEmail({
       workspaceName,
       occurredAt,
@@ -823,7 +823,7 @@ export async function sendStatusChangeEmail(params: SendStatusChangeParams): Pro
 
   return sendEmail({
     to,
-    subject: `Your feedback is now ${formattedNewStatus}!`,
+    subject: `Seu feedback agora está ${formattedNewStatus}!`,
     react: StatusChangeEmail({
       postTitle,
       postUrl,
@@ -872,7 +872,7 @@ export async function sendNewCommentEmail(params: SendNewCommentParams): Promise
 
   return sendEmail({
     to,
-    subject: `New comment on "${postTitle}"`,
+    subject: `Novo comentário em "${postTitle}"`,
     react: NewCommentEmail({
       postTitle,
       postUrl,
@@ -1036,7 +1036,7 @@ export async function sendConversationClosedEmail(params: {
 }): Promise<EmailResult> {
   const subject =
     conversationReplySubject(params.conversationSubject) ??
-    `Re: your conversation with ${params.workspaceName}`
+    `Re: sua conversa com ${params.workspaceName}`
   return sendEmail({
     to: params.to,
     subject,
@@ -1071,13 +1071,13 @@ export async function sendConversationAutoAckEmail(params: {
 }): Promise<EmailResult> {
   const subject =
     conversationReplySubject(params.conversationSubject) ??
-    `Re: your message to ${params.workspaceName}`
+    `Re: sua mensagem para ${params.workspaceName}`
   return sendEmail({
     to: params.to,
     subject,
     react: ConversationReplyEmail({
-      bodyHtml: `<p>We received your email and will get back to you shortly.</p>`,
-      messagePreview: 'We received your email and will get back to you shortly.',
+      bodyHtml: `<p>Recebemos seu e-mail e vamos responder em breve.</p>`,
+      messagePreview: 'Recebemos seu e-mail e vamos responder em breve.',
       agentName: params.workspaceName,
       teamName: params.workspaceName,
     }),
@@ -1156,23 +1156,37 @@ interface TicketEmailCopy {
  * `direction` pattern generalized to the seven ticket kinds. The app passes
  * facts (labels, names, times), never prose.
  */
+/**
+ * Shapes an SLA clock so the sentences stay grammatical for "primeira resposta",
+ * "próxima resposta" and "prazo de resolução" (no "prazo de prazo de…").
+ */
+function slaDeadlinePhrase(clockLabel: string | undefined): { clock: string; prazo: string } {
+  const clock = clockLabel ?? 'resposta'
+  if (clock === 'prazo de resolução') return { clock, prazo: clock }
+  if (clock === 'primeira resposta' || clock === 'próxima resposta') {
+    return { clock, prazo: `prazo da ${clock}` }
+  }
+  if (clock === 'resposta') return { clock, prazo: 'prazo de resposta' }
+  return { clock, prazo: `prazo de ${clock}` }
+}
+
 function ticketEventCopy(p: SendTicketEventEmailParams): TicketEmailCopy {
-  const requesterReason = `You're receiving this because you opened ticket ${p.ticketLabel} at ${p.workspaceName}.`
+  const requesterReason = `Você está recebendo este e-mail porque abriu o ticket ${p.ticketLabel} em ${p.workspaceName}.`
   switch (p.kind) {
     case 'created':
       return {
-        subject: `We received your ticket ${p.ticketLabel}: ${p.title}`,
-        heading: "We've got your ticket",
-        intro: `Your ticket ${p.ticketLabel} "${p.title}" is with the ${p.workspaceName} team. We'll email you as soon as there's a reply.`,
-        ctaLabel: 'View your ticket',
+        subject: `Recebemos seu ticket ${p.ticketLabel}: ${p.title}`,
+        heading: 'Recebemos seu ticket',
+        intro: `Seu ticket ${p.ticketLabel} "${p.title}" está com a equipe de ${p.workspaceName}. Vamos avisar por e-mail assim que houver uma resposta.`,
+        ctaLabel: 'Ver seu ticket',
         reason: requesterReason,
       }
     case 'reply':
       return {
-        subject: `New reply on ${p.ticketLabel}: ${p.title}`,
-        heading: 'New reply on your ticket',
-        intro: `${p.authorName ?? 'The team'} replied to ${p.ticketLabel} "${p.title}":`,
-        ctaLabel: 'View your ticket',
+        subject: `Nova resposta em ${p.ticketLabel}: ${p.title}`,
+        heading: 'Nova resposta no seu ticket',
+        intro: `${p.authorName ?? 'A equipe'} respondeu em ${p.ticketLabel} "${p.title}":`,
+        ctaLabel: 'Ver seu ticket',
         reason: requesterReason,
       }
     case 'status_resolved':
@@ -1181,61 +1195,64 @@ function ticketEventCopy(p: SendTicketEventEmailParams): TicketEmailCopy {
       // customer story for a won't-do close is a plain close.
       if (p.closedGeneric) {
         return {
-          subject: `Your ticket ${p.ticketLabel} was closed`,
-          heading: 'Your ticket was closed',
-          intro: `${p.ticketLabel} "${p.title}" has been closed by the ${p.workspaceName} team.`,
-          note: 'If you have a follow-up, reply on the ticket thread — replying reopens it.',
-          ctaLabel: 'View your ticket',
+          subject: `Seu ticket ${p.ticketLabel} foi encerrado`,
+          heading: 'Seu ticket foi encerrado',
+          intro: `${p.ticketLabel} "${p.title}" foi encerrado pela equipe de ${p.workspaceName}.`,
+          note: 'Se precisar de algo mais, responda na conversa do ticket. A resposta reabre o ticket.',
+          ctaLabel: 'Ver seu ticket',
           reason: requesterReason,
         }
       }
       return {
-        subject: `Your ticket ${p.ticketLabel} was resolved`,
-        heading: 'Your ticket was resolved',
-        intro: `${p.ticketLabel} "${p.title}" has been marked resolved by the ${p.workspaceName} team.`,
-        note: "Reply on the ticket thread if this isn't fixed for you; replying reopens it.",
-        ctaLabel: 'View your ticket',
+        subject: `Seu ticket ${p.ticketLabel} foi resolvido`,
+        heading: 'Seu ticket foi resolvido',
+        intro: `${p.ticketLabel} "${p.title}" foi marcado como resolvido pela equipe de ${p.workspaceName}.`,
+        note: 'Se isso não resolveu o seu caso, responda na conversa do ticket. A resposta reabre o ticket.',
+        ctaLabel: 'Ver seu ticket',
         reason: requesterReason,
       }
     case 'assigned':
       return {
-        subject: `Ticket ${p.ticketLabel} assigned to you`,
-        heading: 'You were assigned a ticket',
-        intro: `${p.ticketLabel} "${p.title}" was assigned to you.`,
-        ctaLabel: 'Open in inbox',
-        reason: "You're receiving this because the ticket was assigned to you.",
+        subject: `Ticket ${p.ticketLabel} atribuído a você`,
+        heading: 'Você recebeu um ticket',
+        intro: `${p.ticketLabel} "${p.title}" foi atribuído a você.`,
+        ctaLabel: 'Abrir na caixa de entrada',
+        reason: 'Você está recebendo este e-mail porque o ticket foi atribuído a você.',
       }
     case 'assigned_team':
       return {
-        subject: `Ticket ${p.ticketLabel} assigned to your team`,
-        heading: 'A ticket was assigned to your team',
-        intro: `${p.ticketLabel} "${p.title}" was assigned to your team.`,
-        ctaLabel: 'Open in inbox',
-        reason: "You're receiving this because the ticket was assigned to your team.",
+        subject: `Ticket ${p.ticketLabel} atribuído à sua equipe`,
+        heading: 'Um ticket foi atribuído à sua equipe',
+        intro: `${p.ticketLabel} "${p.title}" foi atribuído à sua equipe.`,
+        ctaLabel: 'Abrir na caixa de entrada',
+        reason: 'Você está recebendo este e-mail porque o ticket foi atribuído à sua equipe.',
       }
-    case 'sla_warning':
+    case 'sla_warning': {
+      const { clock, prazo } = slaDeadlinePhrase(p.clockLabel)
+      const due = p.dueLabel ?? 'breve'
+      const prazoLabel = `${prazo.charAt(0).toUpperCase()}${prazo.slice(1)}`
       return {
-        subject: `SLA at risk: ${p.clockLabel ?? 'response'} due ${p.dueLabel ?? 'soon'}`,
-        heading: `${capitalize(p.clockLabel ?? 'Response')} SLA approaching breach`,
-        intro: `The conversation with ${p.title} needs a ${p.clockLabel ?? 'response'} soon.`,
-        factLine: `${capitalize(p.clockLabel ?? 'Response')} due ${p.dueLabel ?? 'soon'}`,
-        ctaLabel: 'Open in inbox',
-        reason: "You're receiving this because you're responsible for this conversation.",
+        subject: `SLA em risco: ${clock} vence em ${due}`,
+        heading: `O ${prazo} está acabando`,
+        intro: `A conversa com ${p.title} está perto do ${prazo}.`,
+        factLine: `${prazoLabel}: ${due}`,
+        ctaLabel: 'Abrir na caixa de entrada',
+        reason: 'Você está recebendo este e-mail porque é responsável por esta conversa.',
       }
-    case 'sla_breach':
+    }
+    case 'sla_breach': {
+      const { clock, prazo } = slaDeadlinePhrase(p.clockLabel)
+      const due = p.dueLabel ?? 'antes'
       return {
-        subject: `SLA breached: ${p.clockLabel ?? 'response'} for ${p.title}`,
-        heading: `${capitalize(p.clockLabel ?? 'Response')} SLA breached`,
-        intro: `The conversation with ${p.title} has passed its ${p.clockLabel ?? 'response'} target.`,
-        factLine: `${capitalize(p.clockLabel ?? 'Response')} was due ${p.dueLabel ?? 'earlier'}`,
-        ctaLabel: 'Open in inbox',
-        reason: "You're receiving this because you're responsible for this conversation.",
+        subject: `SLA estourado: ${clock} de ${p.title}`,
+        heading: `O ${prazo} estourou`,
+        intro: `A conversa com ${p.title} passou do ${prazo}.`,
+        factLine: `O ${prazo} era ${due}`,
+        ctaLabel: 'Abrir na caixa de entrada',
+        reason: 'Você está recebendo este e-mail porque é responsável por esta conversa.',
       }
+    }
   }
-}
-
-function capitalize(s: string): string {
-  return s.length === 0 ? s : s[0].toUpperCase() + s.slice(1)
 }
 
 /** Send one of the seven ticket lifecycle emails (single template + copy map). */
@@ -1305,8 +1322,8 @@ export async function sendPostMentionEmail(args: SendPostMentionEmailArgs): Prom
     logoUrl,
   } = args
 
-  const displayName = mentionerName || 'Anonymous user'
-  const subject = `${displayName} mentioned you in "${postTitle}"`
+  const displayName = mentionerName || 'Usuário anônimo'
+  const subject = `${displayName} mencionou você em "${postTitle}"`
 
   return sendEmail({
     to,
@@ -1364,11 +1381,11 @@ export async function sendNoteMentionEmail(args: SendNoteMentionEmailArgs): Prom
     references,
   } = args
 
-  const displayName = authorName || 'A teammate'
+  const displayName = authorName || 'Um colega'
 
   return sendEmail({
     to,
-    subject: `${displayName} mentioned you in an internal note`,
+    subject: `${displayName} mencionou você em uma nota interna`,
     react: NoteMentionEmail({
       authorName,
       preview,
@@ -1425,7 +1442,7 @@ export async function sendChangelogPublishedEmail(
 
   return sendEmail({
     to,
-    subject: `New update: ${changelogTitle}`,
+    subject: `Nova atualização: ${changelogTitle}`,
     react: ChangelogPublishedEmail({
       changelogTitle,
       changelogUrl,
@@ -1475,7 +1492,7 @@ export async function sendFeedbackLinkedEmail(
 
   return sendEmail({
     to,
-    subject: `Your feedback has been linked to "${postTitle}"`,
+    subject: `Seu feedback foi vinculado a "${postTitle}"`,
     react: FeedbackLinkedEmail({
       recipientName,
       postTitle,
@@ -1529,7 +1546,7 @@ export async function sendStatusIncidentPublishedEmail(
 
   return sendEmail({
     to,
-    subject: `Incident: ${incidentTitle}`,
+    subject: `Incidente: ${incidentTitle}`,
     react: StatusIncidentPublishedEmail({
       workspaceName,
       incidentTitle,
@@ -1587,7 +1604,7 @@ export async function sendStatusMaintenanceScheduledEmail(
 
   return sendEmail({
     to,
-    subject: `Scheduled maintenance: ${maintenanceTitle}`,
+    subject: `Manutenção programada: ${maintenanceTitle}`,
     react: StatusMaintenanceScheduledEmail({
       workspaceName,
       maintenanceTitle,
@@ -1644,7 +1661,7 @@ export async function sendCsatRequestEmail(
 
   return sendEmail({
     to,
-    subject: 'How did we do?',
+    subject: 'Como foi o atendimento?',
     react: CsatRequestEmail({ promptText, ratingUrls, workspaceName, logoUrl }),
     from,
     conversationId,
@@ -1709,7 +1726,7 @@ export async function sendVerifyAddressEmail(
   log.debug('sending address verification code')
   return sendEmail({
     to,
-    subject: 'Confirm your email address',
+    subject: 'Confirme seu endereço de e-mail',
     react: VerifyAddressEmail({ code, workspaceName, logoUrl }),
     emailType: 'VerifyAddressEmail',
   })

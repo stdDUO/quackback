@@ -11,7 +11,7 @@ interface VerifyAddressEmailProps {
 /**
  * Proves control of an address someone is adding to, or moving, their account.
  *
- * Deliberately NOT the sign-in template. That one is headed "Sign in to
+ * Deliberately NOT the sign-in template. That one is headed "Entrar no
  * Quackback", and showing it to someone who just asked to change their address
  * reads as a phishing attempt — the action they took and the mail they received
  * would not match. Same code presentation, different sentence.
@@ -21,22 +21,22 @@ interface VerifyAddressEmailProps {
  * gives a cross-device link no chance to be intercepted.
  */
 export function VerifyAddressEmail({ code, workspaceName, logoUrl }: VerifyAddressEmailProps) {
-  const where = workspaceName ? ` for ${workspaceName}` : ''
+  const where = workspaceName ? ` do workspace ${workspaceName}` : ''
   return (
-    <EmailLayout preview={`Your verification code${where}`} logoUrl={logoUrl}>
-      <Heading style={{ ...typography.h1, textAlign: 'center' }}>Confirm your email</Heading>
+    <EmailLayout preview={`Seu código de verificação${where}`} logoUrl={logoUrl}>
+      <Heading style={{ ...typography.h1, textAlign: 'center' }}>Confirme seu e-mail</Heading>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        Enter this code{where} to confirm this address. It expires in 10 minutes.
+        Digite este código{where} para confirmar este endereço. Ele expira em 10 minutos.
       </Text>
       <Section style={utils.codeBox}>
         <Text style={utils.code}>{code}</Text>
       </Section>
       <Text style={{ ...typography.footer, textAlign: 'center' }}>
-        If you didn&apos;t ask for this, ignore it — nothing changes without the code.
+        Se você não pediu isso, ignore. Nada muda sem o código.
       </Text>
       <TransactionalFooter>
-        You&rsquo;re receiving this because someone entered this address on an account. It
-        won&rsquo;t be used for anything until it&rsquo;s confirmed.
+        Você está recebendo este e-mail porque alguém informou este endereço em uma conta. Ele não
+        será usado até ser confirmado.
       </TransactionalFooter>
     </EmailLayout>
   )

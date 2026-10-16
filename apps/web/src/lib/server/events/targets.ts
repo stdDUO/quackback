@@ -426,7 +426,7 @@ function buildPostUrl(rootUrl: string, post: { boardSlug: string; id: string }):
  * Resolve a display name for a comment author.
  */
 function resolveCommenterName(comment: { authorName?: string; authorEmail?: string }): string {
-  return comment.authorName || comment.authorEmail?.split('@')[0] || 'Someone'
+  return comment.authorName || comment.authorEmail?.split('@')[0] || 'Alguém'
 }
 
 /**
@@ -881,7 +881,7 @@ export async function getConversationNoteMentionedEmailTargets(
  * must never see internal status names, and agent watchers get stage moves,
  * not churn) — plus the one deliberate exception: a fresh crossing INTO
  * `closed` via a null-stage status ("Won't do", "Duplicate") fires with the
- * generic label 'Closed', so the requester is never left at a silent dead
+ * generic label 'Encerrado', so the requester is never left at a silent dead
  * end (the internal status name still never leaks). Watchers are
  * actor-excluded.
  *
@@ -922,7 +922,7 @@ export async function getTicketStatusChangedTargets(event: EventData): Promise<H
     event.data
   // The generic-close exception to the null-stage silence (see the doc): a
   // fresh crossing into `closed` whose status projects no public stage still
-  // tells the customer the ticket was closed — as 'Closed', never the
+  // tells the customer the ticket was closed — as 'Encerrado', never the
   // internal status name. Every other same-stage/null-stage move stays silent.
   const genericClose = !stage && newStatus === 'closed' && previousStatus !== 'closed'
   if ((!stage || stage === previousStage) && !genericClose) return null
@@ -936,7 +936,7 @@ export async function getTicketStatusChangedTargets(event: EventData): Promise<H
 
   const { getStageLabels } = await import('@/lib/server/domains/settings/settings.tickets')
   const stageLabels = await getStageLabels()
-  const stageLabel = stage ? (stageLabels[stage as keyof typeof stageLabels] ?? stage) : 'Closed'
+  const stageLabel = stage ? (stageLabels[stage as keyof typeof stageLabels] ?? stage) : 'Encerrado'
   const previousStageLabel = previousStage
     ? (stageLabels[previousStage as keyof typeof stageLabels] ?? previousStage)
     : null
@@ -983,7 +983,7 @@ export async function getTicketRepliedTargets(event: EventData): Promise<HookTar
       // (the converged Messages surface — no standalone ticket page).
       conversationId: await pairConversationId(ticket.id as TicketId),
       title,
-      authorName: authorName ?? (senderType === 'visitor' ? 'The requester' : 'A teammate'),
+      authorName: authorName ?? (senderType === 'visitor' ? 'O solicitante' : 'Um colega'),
       preview: truncate(content, 140),
       requesterPrincipalId: requesterPrincipalId ?? null,
     },
@@ -1015,7 +1015,7 @@ export async function getTicketNoteAddedTargets(event: EventData): Promise<HookT
     config: {
       ticketId: ticket.id,
       title,
-      authorName: authorName ?? 'A teammate',
+      authorName: authorName ?? 'Um colega',
       preview: truncate(content, 140),
     },
   }
@@ -1498,7 +1498,7 @@ export async function getTicketRepliedEmailTargets(
  *
  * Null-stage closes (B22): a status with no `publicStage` ("Won't do",
  * "Duplicate") still emails on the closed crossing, but with the generic
- * 'Closed' label and `closedGeneric` copy — the internal status name never
+ * 'Encerrado' label and `closedGeneric` copy — the internal status name never
  * leaks, and the email no longer claims a won't-do ticket was "resolved".
  * Stage labels resolve at build time via getStageLabels.
  */
@@ -1534,7 +1534,7 @@ export async function getTicketResolvedEmailTargets(
 
   const { getStageLabels } = await import('@/lib/server/domains/settings/settings.tickets')
   const stageLabels = await getStageLabels()
-  const newLabel = stage ? (stageLabels[stage as keyof typeof stageLabels] ?? stage) : 'Closed'
+  const newLabel = stage ? (stageLabels[stage as keyof typeof stageLabels] ?? stage) : 'Encerrado'
   const previousLabel = previousStage
     ? (stageLabels[previousStage as keyof typeof stageLabels] ?? previousStage)
     : null
@@ -1592,7 +1592,7 @@ export async function getTicketAssignedEmailTargets(
   const ctaUrl = inboxUrl(context.portalBaseUrl, ticketId)
   // EventTicketRef carries no title (unlike the replied/status payloads), so
   // re-read it for the assignment copy — but only once we know there's a recipient.
-  const title = (await readTicketFacts(ticketId))?.title ?? `Ticket ${ticketLabel}`
+  const title = (await readTicketFacts(ticketId))?.title ?? `Solicitação ${ticketLabel}`
 
   return recipients.map((id) =>
     ticketEmailTarget(
@@ -1602,10 +1602,10 @@ export async function getTicketAssignedEmailTargets(
   )
 }
 
-/** ISO due-date → a short "Jul 17, 02:00 UTC" label for SLA emails. */
+/** ISO due-date → a short "17 de jul., 02:00 UTC" label for SLA emails. */
 function formatSlaDue(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleString('en-US', {
+  return d.toLocaleString('pt-BR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -1659,15 +1659,13 @@ export async function getSlaEmailTargets(
   const { recipients, emailMap } = await resolveEligibleRecipients(recipientIds, kind)
   if (recipients.length === 0) return []
 
-  const title = conv.visitorName ?? 'a customer'
+  const title = conv.visitorName ?? 'um cliente'
   const clockLabel =
     clock === 'first_response'
-      ? 'first response'
+      ? 'primeira resposta'
       : clock === 'next_response'
-        ? 'next response'
-        : clock === 'time_to_resolve'
-          ? 'time to resolve'
-          : 'resolution'
+        ? 'próxima resposta'
+        : 'prazo de resolução'
   const dueLabel = formatSlaDue(dueAt)
   const ctaUrl = inboxUrl(context.portalBaseUrl, conversationId)
 
@@ -1898,22 +1896,22 @@ export async function getChangelogSubscriberTargets(
 // ============================================================================
 
 const STATUS_COMPONENT_STATUS_LABELS: Record<string, string> = {
-  operational: 'Operational',
-  degraded_performance: 'Degraded performance',
-  partial_outage: 'Partial outage',
-  major_outage: 'Major outage',
-  under_maintenance: 'Under maintenance',
+  operational: 'Operacional',
+  degraded_performance: 'Desempenho degradado',
+  partial_outage: 'Indisponibilidade parcial',
+  major_outage: 'Indisponibilidade total',
+  under_maintenance: 'Em manutenção',
 }
 
 const STATUS_LIFECYCLE_LABELS: Record<string, string> = {
-  investigating: 'Investigating',
-  identified: 'Identified',
-  monitoring: 'Monitoring',
-  resolved: 'Resolved',
-  scheduled: 'Scheduled',
-  in_progress: 'In progress',
-  verifying: 'Verifying',
-  completed: 'Completed',
+  investigating: 'Investigando',
+  identified: 'Identificado',
+  monitoring: 'Monitorando',
+  resolved: 'Resolvido',
+  scheduled: 'Agendado',
+  in_progress: 'Em andamento',
+  verifying: 'Verificando',
+  completed: 'Concluído',
 }
 
 /**
@@ -2039,7 +2037,7 @@ export async function getStatusSubscriberTargets(
       name: c.name,
       status:
         STATUS_COMPONENT_STATUS_LABELS[incidentStatusForComponent(incident, String(c.id))] ??
-        'Operational',
+        'Operacional',
     }))
 
   // In-app notification target (all eligible; ignores emailsDisabled).
@@ -2128,10 +2126,10 @@ function incidentStatusForComponent(
   }
 }
 
-/** ISO string → "July 12, 2026, 02:00 UTC" for maintenance-window emails. */
+/** ISO string → "12 de julho de 2026, 02:00 UTC" for maintenance-window emails. */
 function formatStatusDate(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleString('en-US', {
+  return d.toLocaleString('pt-BR', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',

@@ -222,7 +222,15 @@ async function sendRecoveryCodeAlert(opts: {
       workspaceName: workspace?.settings?.name,
       ipAddress: getClientIp(opts.headers) || null,
       userAgent: opts.headers.get('user-agent'),
-      occurredAt: opts.occurredAt.toUTCString(),
+      occurredAt: opts.occurredAt.toLocaleString('pt-BR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'UTC',
+        timeZoneName: 'short',
+      }),
     })
   } catch (error) {
     log.error({ err: error }, 'failed to send security alert email')

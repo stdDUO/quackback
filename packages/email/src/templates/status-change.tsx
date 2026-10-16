@@ -48,16 +48,16 @@ export function StatusChangeEmail({
 
   return (
     <EmailLayout
-      preview={`${emoji} Your feedback is now ${formattedNewStatus}`}
+      preview={`${emoji} Seu feedback agora está ${formattedNewStatus}`}
       logoUrl={logoUrl}
       logoAlt={organizationName}
     >
       {/* Content */}
       <Heading style={typography.h1}>
-        {emoji} Your feedback is now {formattedNewStatus}!
+        {emoji} Seu feedback agora está {formattedNewStatus}!
       </Heading>
       <Text style={typography.text}>
-        Great news! The status of your feedback has been updated on {organizationName}.
+        Boa notícia! O status do seu feedback foi atualizado em {organizationName}.
       </Text>
 
       {/* Post Title */}
@@ -84,13 +84,13 @@ export function StatusChangeEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={postUrl}>
-          View Feedback
+          Ver feedback
         </Button>
       </Section>
 
       {/* Footer */}
       <NotificationFooter
-        reason="You received this email because you submitted or subscribed to this feedback."
+        reason="Você recebeu este e-mail porque enviou ou assinou este feedback."
         unsubscribeUrl={unsubscribeUrl}
         preferencesUrl={preferencesUrl}
       />

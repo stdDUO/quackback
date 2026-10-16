@@ -17,15 +17,15 @@ export function PortalInviteEmail({
 }: PortalInviteEmailProps) {
   return (
     <EmailLayout
-      preview={`You've been invited to access the ${workspaceName} portal`}
+      preview={`Convite para acessar o portal de ${workspaceName}`}
       logoUrl={logoUrl}
       logoAlt={workspaceName}
     >
       {/* Content */}
-      <Heading style={typography.h1}>You&apos;ve been invited!</Heading>
+      <Heading style={typography.h1}>Você recebeu um convite!</Heading>
       <Text style={typography.text}>
-        You&apos;ve been invited to access the <strong>{workspaceName}</strong> portal. Click below
-        to accept and sign in.
+        Você recebeu um convite para acessar o portal de <strong>{workspaceName}</strong>. Clique
+        abaixo para aceitar e entrar.
       </Text>
 
       {personalMessage && (
@@ -48,13 +48,13 @@ export function PortalInviteEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={inviteLink}>
-          Accept invitation
+          Aceitar convite
         </Button>
       </Section>
 
       {/* Fallback Link */}
       <Text style={typography.textSmall}>
-        Or copy and paste this link into your browser:{' '}
+        Ou copie e cole este link no navegador:{' '}
         <Link href={inviteLink} style={utils.link}>
           {inviteLink}
         </Link>
@@ -62,7 +62,7 @@ export function PortalInviteEmail({
 
       {/* Footer */}
       <TransactionalFooter>
-        If you weren&apos;t expecting this invitation, you can ignore this email.
+        Se você não esperava este convite, pode ignorar este e-mail.
       </TransactionalFooter>
     </EmailLayout>
   )

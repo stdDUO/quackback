@@ -11,7 +11,7 @@
  *    portal's "Stop watching" deletes it, quieting the bell); they opt back
  *    in by replying (appendRequesterReply re-subscribes).
  *  - B22: a null-stage status move stays silent EXCEPT a fresh crossing into
- *    `closed`, which fires with the generic 'Closed' label so the requester
+ *    `closed`, which fires with the generic 'Encerrado' label so the requester
  *    isn't left at a dead end (the internal status name never leaks).
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -114,7 +114,7 @@ describe('getTicketStatusChangedTargets', () => {
     expect(getStageLabels).not.toHaveBeenCalled()
   })
 
-  it('B22: a null-stage CROSSING INTO CLOSED fires with the generic Closed label', async () => {
+  it('B22: a null-stage CROSSING INTO CLOSED fires with the generic Encerrado label', async () => {
     const target = await getTicketStatusChangedTargets(makeEvent({ stage: null }))
     expect(target).toEqual({
       type: 'notification',
@@ -123,7 +123,7 @@ describe('getTicketStatusChangedTargets', () => {
         ticketId: 'ticket_1',
         conversationId: 'conversation_1',
         title: 'Cannot log in',
-        stageLabel: 'Closed',
+        stageLabel: 'Encerrado',
         previousStageLabel: 'Received',
         requesterPrincipalId: 'principal_requester',
       },

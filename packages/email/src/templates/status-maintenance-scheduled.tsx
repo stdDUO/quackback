@@ -37,7 +37,7 @@ export function StatusMaintenanceScheduledEmail({
 }: StatusMaintenanceScheduledEmailProps) {
   return (
     <EmailLayout
-      preview={`Scheduled maintenance: ${maintenanceTitle} (${startLabel})`}
+      preview={`Manutenção programada: ${maintenanceTitle} (${startLabel})`}
       logoUrl={logoUrl}
       logoAlt={workspaceName}
     >
@@ -53,11 +53,11 @@ export function StatusMaintenanceScheduledEmail({
           marginBottom: '8px',
         }}
       >
-        Scheduled maintenance
+        Manutenção programada
       </Text>
       <Heading style={typography.h1}>{maintenanceTitle}</Heading>
       <Text style={typography.text}>
-        {workspaceName} has scheduled maintenance that may affect its services.
+        {workspaceName} programou uma manutenção que pode afetar os serviços.
       </Text>
       {body && <Text style={typography.text}>{body}</Text>}
 
@@ -80,10 +80,10 @@ export function StatusMaintenanceScheduledEmail({
             marginBottom: '4px',
           }}
         >
-          Maintenance window
+          Janela de manutenção
         </Text>
         <Text style={{ ...typography.text, marginTop: '0', marginBottom: '0', fontWeight: '600' }}>
-          {startLabel} to {endLabel}
+          {startLabel} até {endLabel}
         </Text>
       </Section>
 
@@ -98,7 +98,7 @@ export function StatusMaintenanceScheduledEmail({
               marginBottom: '8px',
             }}
           >
-            Affected components
+            Componentes afetados
           </Text>
           <Text style={{ ...typography.textSmall, marginTop: '0', marginBottom: '0' }}>
             {affectedComponents.join(', ')}
@@ -109,13 +109,13 @@ export function StatusMaintenanceScheduledEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={incidentUrl}>
-          View status page
+          Ver página de status
         </Button>
       </Section>
 
       {/* Footer */}
       <NotificationFooter
-        reason="You received this email because you're subscribed to status updates."
+        reason="Você recebeu este e-mail porque assina as atualizações de status."
         unsubscribeUrl={unsubscribeUrl}
         preferencesUrl={preferencesUrl}
       />
