@@ -32,13 +32,15 @@ export function ChangelogPublishedEmail({
 }: ChangelogPublishedEmailProps) {
   return (
     <EmailLayout
-      preview={`New update from ${organizationName}: ${changelogTitle}`}
+      preview={`Nova atualização de ${organizationName}: ${changelogTitle}`}
       logoUrl={logoUrl}
       logoAlt={organizationName}
     >
       {/* Content */}
-      <Heading style={typography.h1}>New update published</Heading>
-      <Text style={typography.text}>{organizationName} just published a product update.</Text>
+      <Heading style={typography.h1}>Nova atualização publicada</Heading>
+      <Text style={typography.text}>
+        {organizationName} acabou de publicar uma atualização do produto.
+      </Text>
 
       {/* Changelog Title */}
       <Section
@@ -78,13 +80,13 @@ export function ChangelogPublishedEmail({
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={changelogUrl}>
-          View Update
+          Ver atualização
         </Button>
       </Section>
 
       {/* Footer */}
       <NotificationFooter
-        reason="You received this email because you're subscribed to changelog updates."
+        reason="Você recebeu este e-mail porque assina as atualizações do changelog."
         unsubscribeUrl={unsubscribeUrl}
         preferencesUrl={preferencesUrl}
       />

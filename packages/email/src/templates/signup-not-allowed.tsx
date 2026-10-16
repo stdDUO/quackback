@@ -21,23 +21,23 @@ interface SignupNotAllowedEmailProps {
  * proven they own.
  */
 export function SignupNotAllowedEmail({ workspaceName, logoUrl }: SignupNotAllowedEmailProps) {
-  const where = workspaceName ? `${workspaceName}` : 'this workspace'
+  const where = workspaceName ? `${workspaceName}` : 'este workspace'
   return (
-    <EmailLayout preview="About your sign-in request" logoUrl={logoUrl} showPoweredBy={false}>
+    <EmailLayout preview="Sobre seu pedido de acesso" logoUrl={logoUrl} showPoweredBy={false}>
       <Heading style={{ ...typography.h1, textAlign: 'center' }}>
-        No account for this address
+        Não há conta para este endereço
       </Heading>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        Someone asked for a sign-in link for this email address at {where}.
+        Alguém pediu um link de acesso para este endereço de e-mail em {where}.
       </Text>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        There is no account here for this address, and {where} is not accepting new accounts. Ask an
-        admin to invite you, then sign in with the address they invite.
+        Não existe uma conta aqui para este endereço, e {where} não está aceitando novas contas.
+        Peça a um administrador para convidar você e depois entre com o endereço do convite.
       </Text>
 
       <TransactionalFooter>
-        If you didn&apos;t request this, you can safely ignore this email. No account was created
-        and nothing was changed.
+        Se você não pediu isso, pode ignorar este e-mail. Nenhuma conta foi criada e nada foi
+        alterado.
       </TransactionalFooter>
     </EmailLayout>
   )

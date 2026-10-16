@@ -75,7 +75,7 @@ describe('notificationHook — post.mentioned', () => {
     )
   })
 
-  it('renders title as "Anonymous user mentioned you" when actor has no displayName', async () => {
+  it('renders title as "Usuário anônimo mencionou você" when actor has no displayName', async () => {
     const event = {
       id: 'evt-2',
       type: 'post.mentioned',
@@ -94,7 +94,7 @@ describe('notificationHook — post.mentioned', () => {
     await notificationHook.run(event, { principalIds: ['principal_target' as never] }, {})
     expect(batchSpy).toHaveBeenCalledWith(
       expect.arrayContaining([
-        expect.objectContaining({ title: expect.stringContaining('Anonymous user') }),
+        expect.objectContaining({ title: expect.stringContaining('Usuário anônimo') }),
       ])
     )
   })
@@ -166,7 +166,7 @@ describe('notificationHook — post.mentioned', () => {
     expect(call[0].metadata).toMatchObject({ actorName: 'Alex' })
   })
 
-  it('falls back to Anonymous user for actorName when the actor has no displayName', async () => {
+  it('falls back to Usuário anônimo for actorName when the actor has no displayName', async () => {
     const event = {
       id: 'evt-7',
       type: 'post.mentioned',
@@ -184,7 +184,7 @@ describe('notificationHook — post.mentioned', () => {
 
     await notificationHook.run(event, { principalIds: ['principal_target' as never] }, {})
     const call = batchSpy.mock.calls[0][0] as Array<{ metadata?: Record<string, unknown> }>
-    expect(call[0].metadata).toMatchObject({ actorName: 'Anonymous user' })
+    expect(call[0].metadata).toMatchObject({ actorName: 'Usuário anônimo' })
   })
 })
 
@@ -251,8 +251,8 @@ describe('notificationHook — post.owner_assigned', () => {
       expect.objectContaining({
         principalId: 'principal_teammate',
         type: 'post_owner_assigned',
-        title: 'You were assigned a post',
-        body: '"Dark mode" was assigned to you',
+        title: 'Você recebeu um post',
+        body: '"Dark mode" foi atribuído a você',
         postId: 'post_1',
         metadata: {
           postTitle: 'Dark mode',
@@ -292,7 +292,7 @@ describe('notificationHook — conversation.assigned', () => {
       expect.objectContaining({
         principalId: 'principal_agent',
         type: 'conversation_assigned',
-        title: 'You were assigned a conversation',
+        title: 'Você recebeu uma conversa',
         metadata: { conversationId: 'conversation_1' },
       }),
     ])
@@ -336,12 +336,12 @@ describe('notificationHook — conversation.assigned', () => {
       expect.objectContaining({
         principalId: 'principal_agent',
         type: 'conversation_assigned',
-        title: 'You were assigned a conversation',
+        title: 'Você recebeu uma conversa',
       }),
       expect.objectContaining({
         principalId: 'principal_teammate',
         type: 'conversation_assigned',
-        title: 'A conversation was assigned to your team',
+        title: 'Uma conversa foi atribuída à sua equipe',
         metadata: { conversationId: 'conversation_1' },
       }),
     ])
@@ -375,13 +375,13 @@ describe('notificationHook — ticket.assigned', () => {
       expect.objectContaining({
         principalId: 'principal_agent',
         type: 'ticket_assigned',
-        title: 'You were assigned a ticket',
+        title: 'Você recebeu um ticket',
         metadata: { ticketId: 'ticket_1' },
       }),
       expect.objectContaining({
         principalId: 'principal_teammate',
         type: 'ticket_assigned',
-        title: 'A ticket was assigned to your team',
+        title: 'Um ticket foi atribuído à sua equipe',
         metadata: { ticketId: 'ticket_1' },
       }),
     ])
@@ -428,8 +428,8 @@ describe('notificationHook — ticket.status_changed', () => {
       expect.objectContaining({
         principalId: 'principal_requester',
         type: 'ticket_status_changed',
-        title: 'Cannot log in is now Resolved',
-        body: 'Moved from Received to Resolved',
+        title: 'Cannot log in agora está Resolved',
+        body: 'Passou de Received para Resolved',
         metadata: { ticketId: 'ticket_1' },
       }),
     ])
@@ -447,8 +447,8 @@ describe('notificationHook — ticket.status_changed', () => {
     await notificationHook.run(makeEvent(), target, config)
     const batch = batchSpy.mock.calls[0][0] as Array<Record<string, unknown>>
     expect(batch[0]).toMatchObject({
-      title: 'Cannot log in is now Resolved',
-      body: 'Open the ticket to see the latest update.',
+      title: 'Cannot log in agora está Resolved',
+      body: 'Abra o ticket para ver a atualização mais recente.',
     })
   })
 })
@@ -489,7 +489,7 @@ describe('notificationHook — ticket.replied (watchers)', () => {
       expect.objectContaining({
         principalId: 'principal_requester',
         type: 'ticket_replied',
-        title: 'Sarah replied on Cannot log in',
+        title: 'Sarah respondeu em Cannot log in',
         body: 'Fix is queued for the next patch.',
         metadata: { ticketId: 'ticket_1', actorName: 'Sarah', audience: 'portal' },
       }),
@@ -547,7 +547,7 @@ describe('notificationHook — ticket.note_added (agent watchers)', () => {
       expect.objectContaining({
         principalId: 'principal_agent_1',
         type: 'ticket_note_added',
-        title: 'Marco added an internal note on Cannot log in',
+        title: 'Marco adicionou uma nota interna em Cannot log in',
         body: 'Repro confirmed on staging.',
         metadata: { ticketId: 'ticket_1', actorName: 'Marco', audience: 'admin' },
       }),
@@ -590,7 +590,7 @@ describe('notificationHook — ticket.external_status_changed (agent watchers)',
       expect.objectContaining({
         principalId: 'principal_agent_1',
         type: 'ticket_external_status_changed',
-        title: 'Linked issue acme/app#412 was closed on Cannot log in',
+        title: 'Issue vinculada acme/app#412 foi encerrada em Cannot log in',
         metadata: { ticketId: 'ticket_1', audience: 'admin' },
       }),
     ])
@@ -610,7 +610,7 @@ describe('notificationHook — ticket.external_status_changed (agent watchers)',
     await notificationHook.run(makeEvent(), target, config)
     expect(batchSpy).toHaveBeenCalledWith([
       expect.objectContaining({
-        title: 'Linked issue PROJ-42 moved to "Done" on Cannot log in',
+        title: 'Issue vinculada PROJ-42 mudou para "Done" em Cannot log in',
       }),
     ])
   })
@@ -675,7 +675,7 @@ describe('notificationHook — assistant.handed_off', () => {
       expect.objectContaining({
         principalId: 'principal_agent',
         type: 'assistant_handed_off',
-        title: 'Quinn handed off a conversation',
+        title: 'Quinn transferiu uma conversa',
         body: 'Customer asked for a human',
         metadata: { conversationId: 'conversation_1' },
       }),
@@ -722,14 +722,14 @@ describe('notificationHook — conversation.note_mentioned', () => {
       expect.objectContaining({
         principalId: 'principal_one',
         type: 'chat_mention',
-        title: 'Jane mentioned you in a conversation',
+        title: 'Jane mencionou você em uma conversa',
         body: 'please take a look',
         metadata: { conversationId: 'conversation_1', actorName: 'Jane' },
       }),
       expect.objectContaining({
         principalId: 'principal_two',
         type: 'chat_mention',
-        title: 'Jane mentioned you in a conversation',
+        title: 'Jane mencionou você em uma conversa',
       }),
     ])
   })
@@ -850,7 +850,7 @@ describe('notificationHook — message.created', () => {
       expect.objectContaining({
         principalId: 'principal_admin',
         type: 'chat_message',
-        title: 'New message from Jane',
+        title: 'Nova mensagem de Jane',
         body: 'urgent please help',
         metadata: { conversationId: 'conversation_1', actorName: 'Jane' },
       }),

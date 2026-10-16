@@ -9,23 +9,23 @@ interface PasswordResetEmailProps {
 
 export function PasswordResetEmail({ resetLink, logoUrl }: PasswordResetEmailProps) {
   return (
-    <EmailLayout preview="Reset your Quackback password" logoUrl={logoUrl}>
+    <EmailLayout preview="Redefina sua senha do Quackback" logoUrl={logoUrl}>
       {/* Content */}
-      <Heading style={{ ...typography.h1, textAlign: 'center' }}>Reset your password</Heading>
+      <Heading style={{ ...typography.h1, textAlign: 'center' }}>Redefina sua senha</Heading>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        Click the button below to set a new password. This link expires in 24 hours.
+        Clique no botão abaixo para definir uma nova senha. Este link expira em 24 horas.
       </Text>
 
       {/* CTA Button */}
       <Section style={{ textAlign: 'center', marginTop: '32px', marginBottom: '32px' }}>
         <Button style={button.primary} href={resetLink}>
-          Reset Password
+          Redefinir senha
         </Button>
       </Section>
 
       {/* Fallback Link */}
       <Text style={typography.textSmall}>
-        Or copy and paste this link into your browser:{' '}
+        Ou copie e cole este link no navegador:{' '}
         <Link href={resetLink} style={utils.link}>
           {resetLink}
         </Link>
@@ -33,7 +33,7 @@ export function PasswordResetEmail({ resetLink, logoUrl }: PasswordResetEmailPro
 
       {/* Footer */}
       <TransactionalFooter>
-        If you didn&apos;t request a password reset, you can safely ignore this email.
+        Se você não pediu a redefinição de senha, pode ignorar este e-mail.
       </TransactionalFooter>
     </EmailLayout>
   )

@@ -1602,10 +1602,10 @@ export async function getTicketAssignedEmailTargets(
   )
 }
 
-/** ISO due-date → a short "Jul 17, 02:00 UTC" label for SLA emails. */
+/** ISO due-date → a short "17 de jul., 02:00 UTC" label for SLA emails. */
 function formatSlaDue(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleString('en-US', {
+  return d.toLocaleString('pt-BR', {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
@@ -1659,15 +1659,15 @@ export async function getSlaEmailTargets(
   const { recipients, emailMap } = await resolveEligibleRecipients(recipientIds, kind)
   if (recipients.length === 0) return []
 
-  const title = conv.visitorName ?? 'a customer'
+  const title = conv.visitorName ?? 'um cliente'
   const clockLabel =
     clock === 'first_response'
-      ? 'first response'
+      ? 'primeira resposta'
       : clock === 'next_response'
-        ? 'next response'
+        ? 'próxima resposta'
         : clock === 'time_to_resolve'
-          ? 'time to resolve'
-          : 'resolution'
+          ? 'tempo para resolver'
+          : 'resolução'
   const dueLabel = formatSlaDue(dueAt)
   const ctaUrl = inboxUrl(context.portalBaseUrl, conversationId)
 
@@ -1898,22 +1898,22 @@ export async function getChangelogSubscriberTargets(
 // ============================================================================
 
 const STATUS_COMPONENT_STATUS_LABELS: Record<string, string> = {
-  operational: 'Operational',
-  degraded_performance: 'Degraded performance',
-  partial_outage: 'Partial outage',
-  major_outage: 'Major outage',
-  under_maintenance: 'Under maintenance',
+  operational: 'Operacional',
+  degraded_performance: 'Desempenho degradado',
+  partial_outage: 'Indisponibilidade parcial',
+  major_outage: 'Indisponibilidade total',
+  under_maintenance: 'Em manutenção',
 }
 
 const STATUS_LIFECYCLE_LABELS: Record<string, string> = {
-  investigating: 'Investigating',
-  identified: 'Identified',
-  monitoring: 'Monitoring',
-  resolved: 'Resolved',
-  scheduled: 'Scheduled',
-  in_progress: 'In progress',
-  verifying: 'Verifying',
-  completed: 'Completed',
+  investigating: 'Investigando',
+  identified: 'Identificado',
+  monitoring: 'Monitorando',
+  resolved: 'Resolvido',
+  scheduled: 'Agendado',
+  in_progress: 'Em andamento',
+  verifying: 'Verificando',
+  completed: 'Concluído',
 }
 
 /**
@@ -2128,10 +2128,10 @@ function incidentStatusForComponent(
   }
 }
 
-/** ISO string → "July 12, 2026, 02:00 UTC" for maintenance-window emails. */
+/** ISO string → "12 de julho de 2026, 02:00 UTC" for maintenance-window emails. */
 function formatStatusDate(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleString('en-US', {
+  return d.toLocaleString('pt-BR', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',

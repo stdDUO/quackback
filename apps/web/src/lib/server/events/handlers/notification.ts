@@ -180,8 +180,8 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'post_status_changed' as NotificationType,
-      title: `Status changed to ${newStatus}`,
-      body: `"${postTitle}" moved from ${previousStatus} to ${newStatus}`,
+      title: `Status alterado para ${newStatus}`,
+      body: `"${postTitle}" passou de ${previousStatus} para ${newStatus}`,
       postId,
       metadata: { postTitle, boardSlug, postUrl, previousStatus, newStatus },
     }))
@@ -189,7 +189,7 @@ function buildNotifications(
 
   if (event.type === 'comment.created') {
     const { commentId, commenterName, commentPreview, isTeamMember } = config
-    const title = isTeamMember ? `${commenterName} (team) commented` : `${commenterName} commented`
+    const title = isTeamMember ? `${commenterName} (equipe) comentou` : `${commenterName} comentou`
     // commentPreview is already HTML-stripped and truncated (200 chars) in targets.ts
     const body = truncate(commentPreview ?? '', 150)
 
@@ -214,13 +214,13 @@ function buildNotifications(
 
   if (event.type === 'changelog.published') {
     const changelogConfig = config as Record<string, unknown>
-    const changelogTitle = (changelogConfig.changelogTitle as string) ?? 'New update'
+    const changelogTitle = (changelogConfig.changelogTitle as string) ?? 'Nova atualização'
     const body = truncate((changelogConfig.contentPreview as string) ?? '', 150)
 
     return principalIds.map((principalId) => ({
       principalId,
       type: 'changelog_published' as NotificationType,
-      title: `New update: ${changelogTitle}`,
+      title: `Nova atualização: ${changelogTitle}`,
       body,
       metadata: {
         changelogId: changelogConfig.changelogId,
@@ -233,12 +233,12 @@ function buildNotifications(
 
   if (event.type === 'post.mentioned') {
     const data = event.data as EventPostMentionedData
-    const actorName = event.actor.displayName?.trim() || 'Anonymous user'
+    const actorName = event.actor.displayName?.trim() || 'Usuário anônimo'
     // principalIds is always a single-element array for post.mentioned (target resolver builds it that way).
     return principalIds.map((principalId) => ({
       principalId,
       type: 'post_mentioned' as NotificationType,
-      title: `${actorName} mentioned you in a post`,
+      title: `${actorName} mencionou você em um post`,
       body: truncate(data.postTitle, 150),
       postId: data.postId as PostId,
       metadata: { postUrl: data.postUrl, excerpt: data.excerpt, actorName },
@@ -249,8 +249,8 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'post_owner_assigned' as NotificationType,
-      title: 'You were assigned a post',
-      body: postTitle ? `"${postTitle}" was assigned to you` : undefined,
+      title: 'Você recebeu um post',
+      body: postTitle ? `"${postTitle}" foi atribuído a você` : undefined,
       postId,
       metadata: { postTitle, boardSlug, postUrl },
     }))
@@ -265,8 +265,8 @@ function buildNotifications(
         principalId,
         type: 'conversation_assigned' as NotificationType,
         title: isDirectAssignee
-          ? 'You were assigned a conversation'
-          : 'A conversation was assigned to your team',
+          ? 'Você recebeu uma conversa'
+          : 'Uma conversa foi atribuída à sua equipe',
         metadata: { conversationId },
       }
     })
@@ -279,9 +279,7 @@ function buildNotifications(
       return {
         principalId,
         type: 'ticket_assigned' as NotificationType,
-        title: isDirectAssignee
-          ? 'You were assigned a ticket'
-          : 'A ticket was assigned to your team',
+        title: isDirectAssignee ? 'Você recebeu um ticket' : 'Um ticket foi atribuído à sua equipe',
         metadata: { ticketId },
       }
     })
@@ -292,7 +290,7 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'assistant_handed_off' as NotificationType,
-      title: 'Quinn handed off a conversation',
+      title: 'Quinn transferiu uma conversa',
       body: truncate(reason ?? '', 150),
       metadata: { conversationId },
     }))
@@ -303,7 +301,7 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'chat_mention' as NotificationType,
-      title: `${authorName} mentioned you in a conversation`,
+      title: `${authorName} mencionou você em uma conversa`,
       body: preview,
       metadata: { conversationId, actorName: authorName },
     }))
@@ -319,12 +317,12 @@ function buildNotifications(
       requesterPrincipalId,
     } = config
     const body = previousStageLabel
-      ? `Moved from ${previousStageLabel} to ${stageLabel}`
-      : 'Open the ticket to see the latest update.'
+      ? `Passou de ${previousStageLabel} para ${stageLabel}`
+      : 'Abra o ticket para ver a atualização mais recente.'
     return principalIds.map((principalId) => ({
       principalId,
       type: 'ticket_status_changed' as NotificationType,
-      title: `${title} is now ${stageLabel}`,
+      title: `${title} agora está ${stageLabel}`,
       body,
       // audience routes the deep link: the requester's row opens the pair's
       // conversation thread (converged Messages — carried as conversationId),
@@ -349,7 +347,7 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'ticket_replied' as NotificationType,
-      title: `${authorName} replied on ${title}`,
+      title: `${authorName} respondeu em ${title}`,
       body: preview,
       metadata: {
         ticketId,
@@ -365,7 +363,7 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'ticket_note_added' as NotificationType,
-      title: `${authorName} added an internal note on ${title}`,
+      title: `${authorName} adicionou uma nota interna em ${title}`,
       body: preview,
       // Note recipients are always agents (role-filtered in the target builder).
       metadata: { ticketId, actorName: authorName, audience: 'admin' },
@@ -374,17 +372,17 @@ function buildNotifications(
 
   if (event.type === 'ticket.external_status_changed') {
     const { ticketId, title, reference, externalStatus, transition } = config
-    const issueLabel = reference ? `Linked issue ${reference}` : 'A linked issue'
+    const issueLabel = reference ? `Issue vinculada ${reference}` : 'Uma issue vinculada'
     const verb =
       transition === 'closed'
-        ? 'was closed'
+        ? 'foi encerrada'
         : transition === 'reopened'
-          ? 'was reopened'
-          : `moved to "${externalStatus}"`
+          ? 'foi reaberta'
+          : `mudou para "${externalStatus}"`
     return principalIds.map((principalId) => ({
       principalId,
       type: 'ticket_external_status_changed' as NotificationType,
-      title: `${issueLabel} ${verb} on ${title}`,
+      title: `${issueLabel} ${verb} em ${title}`,
       // Recipients are always agent watchers (role-filtered in the target builder).
       metadata: { ticketId, audience: 'admin' },
     }))
@@ -395,7 +393,7 @@ function buildNotifications(
     return principalIds.map((principalId) => ({
       principalId,
       type: 'chat_message' as NotificationType,
-      title: `New message from ${authorName}`,
+      title: `Nova mensagem de ${authorName}`,
       body: preview,
       metadata: { conversationId, actorName: authorName },
     }))
@@ -403,11 +401,11 @@ function buildNotifications(
 
   if (event.type === 'status.incident_created' || event.type === 'status.maintenance_scheduled') {
     const c = config as Record<string, unknown>
-    const incidentTitle = (c.incidentTitle as string) ?? 'Status update'
+    const incidentTitle = (c.incidentTitle as string) ?? 'Atualização de status'
     const isMaintenance = event.type === 'status.maintenance_scheduled'
     const title = isMaintenance
-      ? `Scheduled maintenance: ${incidentTitle}`
-      : `New incident: ${incidentTitle}`
+      ? `Manutenção programada: ${incidentTitle}`
+      : `Novo incidente: ${incidentTitle}`
     return principalIds.map((principalId) => ({
       principalId,
       type: 'status_incident' as NotificationType,

@@ -487,7 +487,7 @@ describe('getSlaEmailTargets', () => {
     expect(targets[0].config).toMatchObject({
       kind: 'sla_warning',
       title: 'Jane Doe',
-      clockLabel: 'first response',
+      clockLabel: 'primeira resposta',
       ctaUrl: 'https://p/admin/inbox?i=conversation_1',
     })
     expect(targets[0].config.dueLabel).toBeTruthy()

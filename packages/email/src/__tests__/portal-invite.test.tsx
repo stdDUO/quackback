@@ -7,7 +7,7 @@ describe('PortalInviteEmail', () => {
     const html = await render(
       <PortalInviteEmail workspaceName="Acme" inviteLink="https://example.com/accept/abc" />
     )
-    expect(html).toContain('You&#x27;ve been invited')
+    expect(html).toContain('Você recebeu um convite')
     expect(html).toContain('Acme')
     expect(html).not.toContain('From your inviter')
   })

@@ -81,7 +81,7 @@ const quote: React.CSSProperties = {
 function formatQuoteDate(value: Date | string): string {
   const date = value instanceof Date ? value : new Date(value)
   if (Number.isNaN(date.getTime())) return ''
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  return date.toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' })
 }
 
 function quoteExcerpt(text: string): string {
@@ -118,12 +118,12 @@ export function ConversationReplyEmail({
         <hr style={rule} />
 
         <Text style={footer}>
-          Reply to this email to continue the conversation
+          Responda a este e-mail para continuar a conversa
           {viewUrl ? (
             <>
               {' · '}
               <Link href={viewUrl} style={footerLink}>
-                View it online
+                Ver online
               </Link>
             </>
           ) : null}
@@ -131,9 +131,9 @@ export function ConversationReplyEmail({
 
         {quotedPrevious ? (
           <Text style={quote}>
-            On {quoteDate}
+            Em {quoteDate}
             {quoteDate ? ', ' : ''}
-            {quotedPrevious.name} wrote:
+            {quotedPrevious.name} escreveu:
             <br />
             {quoteExcerpt(quotedPrevious.text)}
           </Text>
