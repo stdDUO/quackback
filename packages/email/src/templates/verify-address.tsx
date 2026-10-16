@@ -21,7 +21,7 @@ interface VerifyAddressEmailProps {
  * gives a cross-device link no chance to be intercepted.
  */
 export function VerifyAddressEmail({ code, workspaceName, logoUrl }: VerifyAddressEmailProps) {
-  const where = workspaceName ? ` da ${workspaceName}` : ''
+  const where = workspaceName ? ` do workspace ${workspaceName}` : ''
   return (
     <EmailLayout preview={`Seu código de verificação${where}`} logoUrl={logoUrl}>
       <Heading style={{ ...typography.h1, textAlign: 'center' }}>Confirme seu e-mail</Heading>

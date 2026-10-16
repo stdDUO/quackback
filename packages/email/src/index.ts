@@ -1156,6 +1156,20 @@ interface TicketEmailCopy {
  * `direction` pattern generalized to the seven ticket kinds. The app passes
  * facts (labels, names, times), never prose.
  */
+/**
+ * Shapes an SLA clock so the sentences stay grammatical for "primeira resposta",
+ * "próxima resposta" and "prazo de resolução" (no "prazo de prazo de…").
+ */
+function slaDeadlinePhrase(clockLabel: string | undefined): { clock: string; prazo: string } {
+  const clock = clockLabel ?? 'resposta'
+  if (clock === 'prazo de resolução') return { clock, prazo: clock }
+  if (clock === 'primeira resposta' || clock === 'próxima resposta') {
+    return { clock, prazo: `prazo da ${clock}` }
+  }
+  if (clock === 'resposta') return { clock, prazo: 'prazo de resposta' }
+  return { clock, prazo: `prazo de ${clock}` }
+}
+
 function ticketEventCopy(p: SendTicketEventEmailParams): TicketEmailCopy {
   const requesterReason = `Você está recebendo este e-mail porque abriu o ticket ${p.ticketLabel} em ${p.workspaceName}.`
   switch (p.kind) {
@@ -1213,24 +1227,31 @@ function ticketEventCopy(p: SendTicketEventEmailParams): TicketEmailCopy {
         ctaLabel: 'Abrir na caixa de entrada',
         reason: 'Você está recebendo este e-mail porque o ticket foi atribuído à sua equipe.',
       }
-    case 'sla_warning':
+    case 'sla_warning': {
+      const { clock, prazo } = slaDeadlinePhrase(p.clockLabel)
+      const due = p.dueLabel ?? 'breve'
+      const prazoLabel = `${prazo.charAt(0).toUpperCase()}${prazo.slice(1)}`
       return {
-        subject: `SLA em risco: ${p.clockLabel ?? 'resposta'} vence ${p.dueLabel ?? 'em breve'}`,
-        heading: `O prazo de ${p.clockLabel ?? 'resposta'} está acabando`,
-        intro: `A conversa com ${p.title} está perto do prazo de ${p.clockLabel ?? 'resposta'}.`,
-        factLine: `Prazo de ${p.clockLabel ?? 'resposta'}: ${p.dueLabel ?? 'em breve'}`,
+        subject: `SLA em risco: ${clock} vence em ${due}`,
+        heading: `O ${prazo} está acabando`,
+        intro: `A conversa com ${p.title} está perto do ${prazo}.`,
+        factLine: `${prazoLabel}: ${due}`,
         ctaLabel: 'Abrir na caixa de entrada',
         reason: 'Você está recebendo este e-mail porque é responsável por esta conversa.',
       }
-    case 'sla_breach':
+    }
+    case 'sla_breach': {
+      const { clock, prazo } = slaDeadlinePhrase(p.clockLabel)
+      const due = p.dueLabel ?? 'antes'
       return {
-        subject: `SLA estourado: ${p.clockLabel ?? 'resposta'} de ${p.title}`,
-        heading: `O prazo de ${p.clockLabel ?? 'resposta'} estourou`,
-        intro: `A conversa com ${p.title} passou do prazo de ${p.clockLabel ?? 'resposta'}.`,
-        factLine: `O prazo de ${p.clockLabel ?? 'resposta'} era ${p.dueLabel ?? 'antes'}`,
+        subject: `SLA estourado: ${clock} de ${p.title}`,
+        heading: `O ${prazo} estourou`,
+        intro: `A conversa com ${p.title} passou do ${prazo}.`,
+        factLine: `O ${prazo} era ${due}`,
         ctaLabel: 'Abrir na caixa de entrada',
         reason: 'Você está recebendo este e-mail porque é responsável por esta conversa.',
       }
+    }
   }
 }
 

@@ -1408,7 +1408,15 @@ export async function handleNewDeviceNotification(
     const { sendNewSignInEmail } = await import('@quackback/email')
     const { recordAuditEvent } = await import('@/lib/server/audit/log')
     const { resolveAccountRecipient } = await import('@/lib/server/email/recipient')
-    const occurredAt = new Date().toISOString()
+    const occurredAt = new Date().toLocaleString('pt-BR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',
+      timeZoneName: 'short',
+    })
     const device = formatSignInDevice(userAgent)
     const location = captureCountryFromHeaders(headers)
     const base = getBaseUrl().replace(/\/$/, '')

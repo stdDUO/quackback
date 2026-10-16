@@ -73,11 +73,23 @@ describe('sendTicketEventEmail', () => {
       ...baseParams,
       kind: 'sla_warning',
       title: 'jane@customer.io',
-      clockLabel: 'first response',
-      dueLabel: 'in 32 minutes',
+      clockLabel: 'primeira resposta',
+      dueLabel: '17 de jul., 02:00 UTC',
     })
     expect(sendMailMock.mock.calls[0][0].subject).toBe(
-      'SLA em risco: first response vence in 32 minutes'
+      'SLA em risco: primeira resposta vence em 17 de jul., 02:00 UTC'
+    )
+
+    sendMailMock.mockClear()
+    await sendTicketEventEmail({
+      ...baseParams,
+      kind: 'sla_breach',
+      title: 'jane@customer.io',
+      clockLabel: 'prazo de resolução',
+      dueLabel: '17 de jul., 02:00 UTC',
+    })
+    expect(sendMailMock.mock.calls[0][0].subject).toBe(
+      'SLA estourado: prazo de resolução de jane@customer.io'
     )
   })
 

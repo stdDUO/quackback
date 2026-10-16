@@ -23,17 +23,18 @@ export function RecoveryCodeUsedEmail({
   occurredAt,
   logoUrl,
 }: RecoveryCodeUsedEmailProps) {
-  const workspaceLabel = workspaceName ? ` da ${workspaceName}` : ''
+  const enteredWhere = workspaceName ? ` no workspace ${workspaceName}` : ''
+  const accountWhere = workspaceName ? ` do workspace ${workspaceName}` : ''
   return (
     <EmailLayout
-      preview={`Um código de recuperação foi usado para entrar${workspaceLabel}`}
+      preview={`Um código de recuperação foi usado para entrar${enteredWhere}`}
       logoUrl={logoUrl}
     >
       <Heading style={{ ...typography.h1, textAlign: 'center' }}>
         Um código de recuperação foi usado
       </Heading>
       <Text style={{ ...typography.text, textAlign: 'center' }}>
-        Alguém entrou na sua conta{workspaceLabel} usando um dos seus códigos de recuperação salvos.
+        Alguém entrou na sua conta{accountWhere} usando um dos seus códigos de recuperação salvos.
       </Text>
 
       <Section style={{ marginTop: '24px', marginBottom: '24px' }}>

@@ -203,7 +203,7 @@ describe('getTicketRepliedTargets', () => {
     ;(event as { actor: { principalId: string } }).actor.principalId = 'principal_requester'
     const actorExcluded = await getTicketRepliedTargets(event)
     expect(actorExcluded?.target).toEqual({ principalIds: ['principal_agent_1'] })
-    expect(actorExcluded?.config).toMatchObject({ authorName: 'The requester' })
+    expect(actorExcluded?.config).toMatchObject({ authorName: 'O solicitante' })
     expect(target?.target).toEqual({
       principalIds: ['principal_requester', 'principal_agent_1'],
     })
@@ -272,11 +272,11 @@ describe('getTicketStatusChangedTargets (watchers union)', () => {
     expect(target?.config).toMatchObject({ requesterPrincipalId: null })
   })
 
-  it('B22: a null-stage crossing INTO CLOSED fires for watchers with the generic Closed label', async () => {
+  it('B22: a null-stage crossing INTO CLOSED fires for watchers with the generic Encerrado label', async () => {
     getTicketWatchersForEvent.mockResolvedValue(['principal_agent_1'])
     const target = await getTicketStatusChangedTargets(statusEvent({ stage: null }))
     expect(target?.target).toEqual({ principalIds: ['principal_agent_1'] })
-    expect(target?.config).toMatchObject({ stageLabel: 'Closed' })
+    expect(target?.config).toMatchObject({ stageLabel: 'Encerrado' })
   })
 
   it('a null-stage move that is not a closed crossing, and same-stage moves, stay silent regardless of watchers', async () => {
